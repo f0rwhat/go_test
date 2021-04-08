@@ -1,1 +1,1 @@
-web: bin/go-test
+web: bin/cmd
