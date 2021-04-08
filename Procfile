@@ -1,1 +1,1 @@
-web: bin/o-test
+web: bin/go-test
