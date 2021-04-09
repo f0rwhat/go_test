@@ -131,8 +131,8 @@ func parseString(data string) *list.List {
 					if stack.Back().Value.(string) == "(" {
 						break
 					}
-					stack.Remove(stack.Back())
 				}
+				stack.Remove(stack.Back())
 			} else {
 				if stack.Len() > 0 {
 					if operationPriority(currentChar) <= operationPriority(stack.Back().Value.(string)) {
