@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 )
 
 func main() {
@@ -10,6 +11,10 @@ func main() {
 		fmt.Fprintf(w, "Hello world")
 	})
 
-	http.ListenAndServe(":8000", nil)
+	port, exists := os.LookupEnv("PORT")
+	if exists == false {
+		fmt.Printf("NO PORT")
+	}
+	http.ListenAndServe(":"+port, nil)
 
 }
