@@ -4,6 +4,7 @@ import (
 	"container/list"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"math/rand"
 	"net/http"
 	"os"
@@ -182,9 +183,17 @@ func parseString(data string) *list.List {
 
 func calculate(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	params := mux.Vars(r)
-	fmt.Println(params)
-	functors := parseString(params["expression"])
+	//params := mux.Vars(r)
+	htmlData, err := ioutil.ReadAll(r.Body) //<--- here!
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	// print out
+	fmt.Println(os.Stdout, string(htmlData)) //<-- here !
+	//fmt.Println(params)
+	functors := parseString(string(htmlData))
 	stack := list.New()
 	for e := functors.Front(); e != nil; e = e.Next() {
 		current := e.Value.(string)
@@ -227,7 +236,7 @@ func main() {
 	r.HandleFunc("/books/{id}", updateBook).Methods("PUT")
 	r.HandleFunc("/books/{id}", deleteBook).Methods("DELETE")
 	r.HandleFunc("/api/v1/health", healthCheck).Methods("HEAD")
-	r.HandleFunc("/api/v1/arithmetic/{expression}", calculate).Methods("POST")
+	r.HandleFunc("/api/v1/arithmetic", calculate).Methods("POST")
 	//log.Fatal(http.ListenAndServe(":8000", r))
 	port, exists := os.LookupEnv("PORT")
 	if exists == false {
